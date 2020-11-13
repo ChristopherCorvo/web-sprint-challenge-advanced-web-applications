@@ -25,7 +25,7 @@ const Login = () => {
       .post('/api/login', loginData)
         .then((res)=>{
           // console.log(res)
-          window.localStorage.setItem('token',res.data.payload)
+          localStorage.setItem('token',res.data.payload)
           history.push('/bubble-page')
         })
         .catch((error)=>{
