@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { axiosWithAuth } from "../util/axiosWithAuth";
+import { useHistory } from 'react-router-dom'
 
 const initialColor = {
   color: "",
@@ -7,7 +9,7 @@ const initialColor = {
 };
 
 const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
+ 
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
@@ -21,10 +23,28 @@ const ColorList = ({ colors, updateColors }) => {
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    axiosWithAuth()
+      .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
+        .then((res)=>{
+          console.log(res)
+        })
+        .catch((error)=> {
+          console.log(error)
+        })
   };
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    axiosWithAuth()
+      .delete(`/api/colors/${color}`)
+        .then((res)=> {
+          console.log(res)
+          setEditing(false)
+        
+        })
+        .catch((error)=> {
+          console.log(error)
+        })
   };
 
   return (
@@ -32,7 +52,7 @@ const ColorList = ({ colors, updateColors }) => {
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => editColor(color)}>
+          <li data-testid='color' key={color.color} onClick={() => editColor(color)}>
             <span>
               <span className="delete" onClick={e => {
                     e.stopPropagation();
@@ -76,6 +96,7 @@ const ColorList = ({ colors, updateColors }) => {
           </label>
           <div className="button-row">
             <button type="submit">save</button>
+            <button onClick={()=> deleteColor(colorToEdit.id)}>Delete</button>
             <button onClick={() => setEditing(false)}>cancel</button>
           </div>
         </form>
