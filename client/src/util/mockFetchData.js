@@ -1,13 +1,12 @@
 
-import React, { useEffect } from 'react' 
-import axios from 'axios'
+import { axiosWithAuth } from './axiosWithAuth'
 
 export const mockFetchData = () => {
-    return     
-        axios
-        .get('http://localhost:5000/api/colors')
+       
+    return axiosWithAuth()
+        .post('/api/colors')
             .then((res)=>{
-            return res
+                return res
             })
             .catch((error)=> {
             return err

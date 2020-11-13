@@ -1,28 +1,26 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import BubblePage from "./BubblePage";
 
 import { mockFetchData } from '../util/mockFetchData'
 jest.mock('../util/mockFetchData.js')
 
-test("Fetches data and renders the bubbles", async () => {
-  // Finish this test
-  // Arrange:
-  render(<BubblePage/>)
-  // create some dummy data
+const fakeData = {
+  data: [
+          { color: 'TestColor1', code: {hex: '#000000'}, id: 20},
+          { color: 'TestColor2', code: {hex: '#222222'}, id: 21},
+        ]
+}
 
-  // Act
-  mockFetchData.mockResolvedValueOnce({
-    data: [
-      { color: 'TestColor1', code: {hex: '#000000'}},
-      { color: 'TestColor2', code: {hex: '#222222'}},
-    ]
-  })
+test("Fetches data and renders the bubbles", async () => {
+  // Arrange:
+  mockFetchData.mockResolvedValueOnce(fakeData)
   
   //Assert
+  const { getByText, getAllByTestId } = render(<BubblePage/>)
 
   await waitFor(()=>{
-    const colorList = screen.getByText('TestColor1')
-    expect(colorList).toHaveLength(1)
+    expect(getByText('TestColor1')).toBeInTheDocument()
+    expect(getAllByTestId('color')).toHaveLength(2)
   })
 });
